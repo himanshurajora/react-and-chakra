@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Circle, Flex } from "@chakra-ui/react";
 import { useState } from "react";
 import Logo from "./Logo";
 import Menu from "./Menu";
@@ -20,8 +20,8 @@ export default function Navbar({ ...props }) {
                 wrap="wrap"
                 w="100%"
                 p={4}
-                bg="facebook.300"
-                color={["white", "white", "primary.700", "primary.700"]}
+                bg="gray.500"
+                color="white"
                 fontWeight="bold"
                 {...props}
             >
@@ -31,6 +31,13 @@ export default function Navbar({ ...props }) {
                 >My Home</Logo>
                 <MenuToggle isOpen={isOpen} toggle={toggle} ></MenuToggle>
                 <Menu isOpen={isOpen}></Menu>
+                <Circle
+                    minHeight="30px"
+                    minWidth="30px"
+                    bg="pink.400"
+                >
+                    SN
+                </Circle>
             </Flex>
         </>
     )
