@@ -1,13 +1,14 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import styles from './app.module.css';
-import NxWelcome from './nx-welcome';
-
+import { Routes } from 'react-router-dom';
+import { ChakraProvider } from '@chakra-ui/react'
+import AppRoutes from '../routes/AppRoutes';
+import { CustomChakraTheme } from '../utils/chakra/ChakraTheme';
 export function App() {
   return (
-    <>
-      <NxWelcome title="frontend" />
-      <div />
-    </>
+    <ChakraProvider theme={CustomChakraTheme}>
+        <AppRoutes />
+    </ChakraProvider>
   );
 }
 
