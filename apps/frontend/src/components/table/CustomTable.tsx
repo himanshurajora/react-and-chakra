@@ -13,10 +13,13 @@ import {
   Tr,
   Td,
   chakra,
+  Button,
 } from '@chakra-ui/react';
 import ColumnFilter from './ColumnFilter';
 import GlobalFilter from './GlobalFilter';
+import { useColorMode } from '@chakra-ui/react';
 export default function CustomTable() {
+  const { toggleColorMode } = useColorMode();
   const data = useMemo(
     () => [
       {
@@ -101,6 +104,11 @@ export default function CustomTable() {
 
   return (
     <>
+        <Button 
+            onClick={() => toggleColorMode()}
+        >
+            Toggle Color Mode
+        </Button>
       <GlobalFilter
         filter={globalFilter}
         setFilter={setGlobalFilter}
@@ -126,7 +134,9 @@ export default function CustomTable() {
                           : ''}
                       </span>
                     }
-                  {column.canFilter ? column.render('Filter') : null}
+                    {column.canFilter
+                      ? column.render('Filter')
+                      : null}
                   </Th>
                 </>
               ))}
