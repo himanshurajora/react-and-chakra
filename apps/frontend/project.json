@@ -52,7 +52,10 @@
       },
       "configurations": {
         "development": {
-          "buildTarget": "frontend:build:development"
+          "buildTarget": "frontend:build:development",
+          "hmr": true,
+          "liveReload": true,
+          "port": 3000
         },
         "production": {
           "buildTarget": "frontend:build:production",

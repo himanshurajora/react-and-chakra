@@ -104,11 +104,9 @@ export default function CustomTable() {
 
   return (
     <>
-        <Button 
-            onClick={() => toggleColorMode()}
-        >
-            Toggle Color Mode
-        </Button>
+      <Button onClick={() => toggleColorMode()}>
+        Toggle Color Mode
+      </Button>
       <GlobalFilter
         filter={globalFilter}
         setFilter={setGlobalFilter}
