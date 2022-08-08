@@ -1,225 +1,153 @@
-import { Box, Button, ButtonGroup, Flex, HStack, Image, Text, VStack } from "@chakra-ui/react";
-import Navbar from "../navbar/Navbar";
-
-const CustomBorderButton = ({ children }: any) => {
-    return (
-        <Button
-            size="xs"
-            variant="outline"
-            border="1px solid black"
-            borderRadius="50"
-            _hover={{ backgroundColor: "gray.200" }}
-            _active={{ backgroundColor: "gray.600", color: "white" }}
-        >
-            {children}
-        </Button>
-    )
-}
-
-const Message = ({message, time} : any) => {
-    return (
-        <Flex
-            direction="row"
-            justify="space-between"
-            width="100%"
-        >
-            <Text
-                fontSize="sm"
-            >
-                {message}
-            </Text>
-            <Text
-                fontSize="sm"
-                fontWeight="bold"
-            >
-              {time}
-            </Text>
-
-        </Flex>
-    )
-}
-
-const CustomStatusBox = ({ title, data }: any) => {
-    return (
-        <Box paddingLeft={5}>
-            <Text>
-                {title}
-                <Text
-                    fontSize="xl"
-                    fontWeight="bold"
-                >
-                    {data}
-                </Text>
-            </Text>
-        </Box>
-    )
-}
-
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Flex,
+  HStack,
+  Image,
+  Input,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
+import Navbar from '../navbar/Navbar';
+import React, { useEffect, useRef } from 'react';
+import { fabric } from 'fabric';
+import { instruction } from './instruction';
+import { Canvas } from 'react-design-editor';
 export default function Home() {
-    return (
-        <>
-            <Navbar></Navbar>
-            <HStack
-                spacing={3}
-                padding={0}
-                align="flex-start"
-                flexWrap="wrap"
-            >
-                <VStack
-                    spacing={3}
-                    padding={6}
-                >
-                    <Box
-                        backgroundColor="gray.100"
-                        padding={4}
-                        shadow="md"
-                        maxWidth="600px"
-                    >
-                        <Flex
-                            direction={["row"]}
-                            alignItems="center"
-                            marginBottom={5}
-                        >
-                            <Text
-                                fontSize="lg"
-                                fontWeight="bold"
-                            >
-                                Checklist Status
-                            </Text>
-                            <ButtonGroup
-                                marginLeft="7"
-                            >
-                                <CustomBorderButton>Shift</CustomBorderButton>
-                                <CustomBorderButton>Week</CustomBorderButton>
-                                <CustomBorderButton>Month</CustomBorderButton>
-                            </ButtonGroup>
-                        </Flex>
-                        <Flex
-                            direction={"row"}
-                        >
-                            <Image
-                                src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80"
-                                alt=""
-                                maxWidth="300px"
-                            />
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-                            <Flex
-                                direction="row"
-                                wrap="wrap"
-                            >
-                                <CustomStatusBox
-                                    title="Total Checklist"
-                                    data="10"
-                                ></CustomStatusBox>
-                                <CustomStatusBox
-                                    title="Completed"
-                                    data="5"
-                                ></CustomStatusBox>
-                                <CustomStatusBox
-                                    title="Pending"
-                                    data="5"
-                                ></CustomStatusBox>
-                            </Flex>
-                        </Flex>
-                    </Box>
-                    <Box
-                        backgroundColor="gray.100"
-                        padding={4}
-                        shadow="md"
-                        maxWidth="600px"
-                    >
-                        <Flex
-                            direction={["row"]}
-                            alignItems="center"
-                            marginBottom={5}
-                        >
-                            <Text
-                                fontSize="lg"
-                                fontWeight="bold"
-                            >
-                                Checklist Status
-                            </Text>
-                            <ButtonGroup
-                                marginLeft="7"
-                            >
-                                <CustomBorderButton>Shift</CustomBorderButton>
-                                <CustomBorderButton>Week</CustomBorderButton>
-                                <CustomBorderButton>Month</CustomBorderButton>
-                            </ButtonGroup>
-                        </Flex>
-                        <Flex
-                            direction={"row"}
-                        >
-                            <Image
-                                src="https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80"
-                                alt=""
-                                maxWidth="300px"
-                            />
+  // const importJSON = async (
+  //   json: any,
+  //   callback?: (canvas: fabric.Canvas) => void
+  // ) => {
+  //   if (typeof json === 'string') {
+  //     json = JSON.parse(json);
+  //   }
+  //   let prevLeft = 0;
+  //   let prevTop = 0;
+  //   // this.canvas.setBackgroundColor(
+  //   //   this.canvasOption.backgroundColor,
+  //   //   this.canvas.renderAll.bind(this.canvas)
+  //   // );
+  //   const workarea = json.find((obj: any) => obj.id === 'workarea');
+  //   if (!this.workarea) {
+  //     this.workareaHandler.initialize();
+  //   }
+  //   if (workarea) {
+  //     prevLeft = workarea.left;
+  //     prevTop = workarea.top;
+  //     this.workarea.set(workarea);
+  //     await this.workareaHandler.setImage(workarea.src, true);
+  //     this.workarea.setCoords();
+  //   } else {
+  //     this.canvas.centerObject(this.workarea);
+  //     this.workarea.setCoords();
+  //     prevLeft = this.workarea.left;
+  //     prevTop = this.workarea.top;
+  //   }
+  //   json.forEach((obj: FabricObjectOption) => {
+  //     if (obj.id === 'workarea') {
+  //       return;
+  //     }
+  //     const canvasWidth = this.canvas.getWidth();
+  //     const canvasHeight = this.canvas.getHeight();
+  //     const { width, height, scaleX, scaleY, layout, left, top } =
+  //       this.workarea;
+  //     if (layout === 'fullscreen') {
+  //       const leftRatio = canvasWidth / (width * scaleX);
+  //       const topRatio = canvasHeight / (height * scaleY);
+  //       obj.left *= leftRatio;
+  //       obj.top *= topRatio;
+  //       obj.scaleX *= leftRatio;
+  //       obj.scaleY *= topRatio;
+  //     } else {
+  //       const diffLeft = left - prevLeft;
+  //       const diffTop = top - prevTop;
+  //       obj.left += diffLeft;
+  //       obj.top += diffTop;
+  //     }
+  //     if (obj.superType === 'element') {
+  //       obj.id = uuid();
+  //     }
+  //     this.add(obj, false, true);
+  //     this.canvas.renderAll();
+  //   });
+  //   this.objects = this.getObjects();
+  //   if (callback) {
+  //     callback(this.canvas);
+  //   }
+  //   return Promise.resolve(this.canvas);
+  // };
 
-                            <Flex
-                                direction="row"
-                                wrap="wrap"
-                            >
-                                <CustomStatusBox
-                                    title="Total Checklist"
-                                    data="10"
-                                ></CustomStatusBox>
-                                <CustomStatusBox
-                                    title="Completed"
-                                    data="5"
-                                ></CustomStatusBox>
-                                <CustomStatusBox
-                                    title="Pending"
-                                    data="5"
-                                ></CustomStatusBox>
-                            </Flex>
-                        </Flex>
-                    </Box>
-                </VStack>
-                <VStack
-                    spacing={3}
-                    padding={6}
-                >
-                    {/* Notification Component */}
-                    <Box
-                        backgroundColor="gray.100"
-                        padding={4}
-                        shadow="md"
-                        maxWidth="600px"
-                    >
-                        <VStack
-                            justify="flex-start"
-                            align="flex-start"
-                        >
-                            <Text
-                                fontSize="lg"
-                                fontWeight="bold"
-                                marginBottom={5}
-                            >
-                                Notification
-                            </Text>
-                            <VStack
-                                spacing={3}
-                                width="500px"
-                            >
-                                <Message 
-                                message="lorem ipsum dolor sit amet"
-                                time="12:00 AM 23/12/2020"
-                                />
-                                <Message 
-                                message="lorem ipsum dolor sit amet"
-                                time="12:00 AM 23/12/2020"
-                                />
-                                <Message 
-                                message="lorem ipsum dolor sit amet"
-                                time="12:00 AM 23/12/2020"
-                                />
-                            </VStack>
-                        </VStack>
-                    </Box>
-                </VStack>
-            </HStack>
-        </>
+  useEffect(() => {
+    const Canvas = new fabric.Canvas(canvasRef.current, {});
+    const triangle = new fabric.Triangle({ selectable: false });
+    Canvas.on('mouse:down', function (opt) {
+      Canvas.relativePan(opt.e);
+    });
+    Canvas.on('mouse:wheel', function (opt) {
+      var delta = opt.e.deltaY;
+      var zoom = Canvas.getZoom();
+      zoom *= 0.999 ** delta;
+      if (zoom > 20) zoom = 20;
+      if (zoom < 0.01) zoom = 0.01;
+      Canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+      opt.e.preventDefault();
+      opt.e.stopPropagation();
+      var vpt = Canvas.viewportTransform!;
+      if (zoom < 400 / 1000) {
+        vpt[4] = 200 - (1000 * zoom) / 2;
+        vpt[5] = 200 - (1000 * zoom) / 2;
+      } else {
+        if (vpt[4] >= 0) {
+          vpt[4] = 0;
+        } else if (vpt[4] < Canvas.getWidth() - 1000 * zoom) {
+          vpt[4] = Canvas.getWidth() - 1000 * zoom;
+        }
+        if (vpt[5] >= 0) {
+          vpt[5] = 0;
+        } else if (vpt[5] < Canvas.getHeight() - 1000 * zoom) {
+          vpt[5] = Canvas.getHeight() - 1000 * zoom;
+        }
+      }
+    });
+    // remove workarea object from objects
+    const objects = instruction.objects.filter(
+      (obj: any) => obj.id !== 'workarea' || true
     );
-}
 
+    // lock all edit controls
+    const lockedObjects = objects.map((obj: any) => {
+      return {
+        ...obj,
+        lockMovementX: true,
+        lockMovementY: true,
+        lockRotation: true,
+        lockScalingX: true,
+        lockScalingY: true,
+        lockUniScaling: true,
+        selectable: false,
+      };
+    });
+
+    instruction.objects = lockedObjects;
+    Canvas.loadFromJSON(instruction, () => {});
+  }, []);
+
+  return (
+    <>
+      <Navbar></Navbar>
+      <div
+        style={{ width: '100vw', display: 'flex', justifyContent: 'center' }}
+      >
+        <canvas
+          ref={canvasRef}
+          width="1000px"
+          height="1000px"
+          style={{ border: '1px solid black' }}
+        />
+      </div>
+    </>
+  );
+}
